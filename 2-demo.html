@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    .color {
+      background-color: red;
+      width: 30px;
+      height: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    {{msg}} <br>
+    使用过滤器前的 {{date}} <br>
+    使用过滤器后的 {{date | formatDate}} <br>
+
+    <h1>指令</h1>
+    v­-text:解析文本 和{{ }} 作用一样<br>
+    <span v-text="apple"></span><br>
+    <br>
+
+    v-html:解析html <br>
+    <span v-html="banana"></span> <br>
+    <br>
+
+    v-bind:更新 HTML 元素上的属性，比如id、class （语法糖v-bind —> : (冒号)） <br>
+    <div v-bind:class = 'className'></div>
+    <br>
+
+    v-on:绑定事件监听器 （语法糖v-on -> @）<br>
+    <button v-on:click = "count">{{number}}</button>
+    <br>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+  <script>
+    //el，data是必要的属性
+    let app = new Vue({
+      el: '#app',
+      data: {
+        msg: '开始学习Vue',
+        date: new Date(),
+        apple: 'apple',
+        banana: '<span style="color: blue">banana</span>',
+        className: 'color',
+        number: 0
+      },
+      //定义过滤器，filters
+      filters: {
+        formatDate: function(value){
+          //将字符串转化为date类型
+          let date = new Date(value)
+          let year = date.getFullYear()
+          let month = plusDate(date.getMonth() + 1)
+          let day = plusDate(date.getDate())
+          let hours = plusDate(date.getHours())
+          let min = plusDate(date.getMinutes())
+          let sec = plusDate(date.getSeconds())
+          return year + '-' + month + '-' + day + '   ' + hours + ':' + min + ':' + sec
+        }
+      },
+      methods: {
+        count: function(){
+          this.number++
+        }
+      },
+      mounted: function(){
+        this.clock = setInterval(()=>{
+          this.date = new Date()     //this代表的是Vue实例
+        },1000)
+      },
+      beforeDestroy: function(){
+        if(this.clock){
+          clearInterval(this.clock)
+        }
+      }
+    })
+    
+    function plusDate(value){
+      return (value<10 ? '0' + value : value)
+    }
+
+    //访问属性
+    console.log(app.$el)
+    console.log(app.$data)
+    console.log(app.msg)
+  </script>
+
+</body>
+</html>
